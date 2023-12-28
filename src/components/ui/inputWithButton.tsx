@@ -1,9 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import React, { ChangeEvent } from "react";
 
-export function InputWithButton({ username, setUsername, fetchUserData }) {
+// Define the types for the props
+interface InputWithButtonProps {
+  username: string;
+  setUsername: (username: string) => void;
+  fetchUserData: () => void;
+}
+
+export function InputWithButton({ username, setUsername, fetchUserData }: InputWithButtonProps) {
   const handleButtonClick = () => {
     fetchUserData();
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
   };
 
   return (
@@ -12,7 +24,7 @@ export function InputWithButton({ username, setUsername, fetchUserData }) {
         type="search"
         placeholder="username"
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={handleInputChange}
       />
       <Button type="submit" onClick={handleButtonClick}>
         Game Time
