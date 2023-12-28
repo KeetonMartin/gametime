@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 
 // Define the types for the props
 interface InputWithButtonProps {

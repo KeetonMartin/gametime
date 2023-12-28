@@ -7,8 +7,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-function JsonCard({ username, data }) {
-    return (
+// Define the types for the props
+interface JsonCardProps {
+  username: string;
+  data: never; // Replace 'any' with a more specific type if you know the structure of 'data'
+}
+
+const JsonCard: React.FC<JsonCardProps> = ({ username, data }) => {
+  return (
     <Card>
       <CardHeader>
         <CardTitle>Username</CardTitle>
@@ -17,7 +23,7 @@ function JsonCard({ username, data }) {
       <CardContent>
         <p>API Response:</p>
         {/* Check if data exists and is an object before stringifying */}
-        {data && typeof data === 'object' ? (
+        {data && typeof data === "object" ? (
           <pre>{JSON.stringify(data, null, 2)}</pre>
         ) : (
           <p>No data or invalid format</p>
@@ -28,6 +34,6 @@ function JsonCard({ username, data }) {
       </CardFooter>
     </Card>
   );
-}
+};
 
 export default JsonCard;
