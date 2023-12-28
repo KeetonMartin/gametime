@@ -32,7 +32,7 @@ const LeagueCard: React.FC<LeagueCardProps> = ({
         <CardDescription>{league.numberOfTeams}-Man League</CardDescription>
         {userRoster ? (
           <CardDescription>
-            Record: 
+            Regular Season Record: 
             <span style={{ color: 'green' }}> {userRoster.settings.wins} wins</span> / 
             <span style={{ color: 'red' }}> {userRoster.settings.losses} losses</span>
             {userRoster.settings.ties > 0 ? ` / ${userRoster.settings.ties} ties` : ""}
