@@ -32,9 +32,6 @@ const JsonCard: React.FC<JsonCardProps> = ({ username, data, userId }) => {
         {/* Display user_id if available */}
         {userId && <p>User ID: {userId}</p>}
       </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
     </Card>
   );
 };

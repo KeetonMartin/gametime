@@ -4,6 +4,7 @@ import Heading from './components/ui/heading';
 import { Title } from './components/ui/title';
 import { InputWithButton } from './components/ui/inputWithButton';
 import UserCard from './components/ui/userCard';
+import JsonCard from './components/ui/jsonCard';
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -38,6 +39,7 @@ function App() {
       <Title />
       <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
       <UserCard username={username} userId={userId} displayName={displayName}/>
+      <JsonCard username={username} data={apiResponse} userId={userId} />
     </>
   );
 }
