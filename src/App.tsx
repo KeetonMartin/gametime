@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './App.css';
 import Heading from './components/ui/heading';
 import { Title } from './components/ui/title';
 import { InputWithButton } from './components/ui/inputWithButton';
 import UserCard from './components/ui/userCard';
 import LeagueCard from './components/ui/leagueCard';
+import { PlayersContext, PlayersProvider } from './contexts/PlayersContext'; // Import the context and provider
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -25,7 +26,14 @@ function App() {
   const [leagueData, setLeagueData] = useState<ApiResponse>(null); // State to store the league data
   const [leagues, setLeagues] = useState<FantasyFootballLeague[]>([]); // State to store league objects
 
+  const { setPlayers } = useContext(PlayersContext); // Use the setPlayers function from context
+
   useEffect(() => {
+    fetch('https://api.sleeper.app/v1/players/nfl')
+      .then(response => response.json())
+      .then(data => setPlayers(data)) // Store the data in the global state
+      .catch(error => console.error('Error fetching player data:', error));
+
     if (leagueData) {
       const mappedLeagues = leagueData.map((league: any) => ({
         numberOfTeams: league.total_rosters,
@@ -41,7 +49,7 @@ function App() {
         fetchRosterData(league.leagueId);
       });
     }
-  }, [leagueData]);
+  }, [leagueData, setPlayers]);
 
   const fetchUserData = async () => {
     try {
@@ -94,10 +102,16 @@ function App() {
       <UserCard username={username} userId={userId} displayName={displayName} />
       {/* Create an array of LeagueCard components based on leagues */}
       {leagues.map((league, index) => (
-        <LeagueCard key={index} league={league} userId={userId} />
+        <LeagueCard key={index} league={league} userId={userId} displayName={displayName} />
       ))}
     </>
   );
 }
 
-export default App;
+const WrappedApp = () => (
+  <PlayersProvider>
+    <App />
+  </PlayersProvider>
+);
+
+export default WrappedApp;
