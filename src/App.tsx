@@ -4,7 +4,6 @@ import Heading from './components/ui/heading';
 import { Title } from './components/ui/title';
 import { InputWithButton } from './components/ui/inputWithButton';
 import UserCard from './components/ui/userCard';
-import JsonCard from './components/ui/jsonCard';
 import LeagueCard from './components/ui/leagueCard';
 
 // Define a type for your API response
