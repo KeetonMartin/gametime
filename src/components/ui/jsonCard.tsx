@@ -10,7 +10,7 @@ import {
 // Define the types for the props
 interface JsonCardProps {
   username: string;
-  data: never; // Replace 'any' with a more specific type if you know the structure of 'data'
+  data: null | any; // Replace 'any' with a more specific type if you know the structure of 'data'
 }
 
 const JsonCard: React.FC<JsonCardProps> = ({ username, data }) => {
