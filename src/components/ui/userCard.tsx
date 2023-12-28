@@ -22,7 +22,7 @@ const UserCard: React.FC<UserCardProps> = ({ username, userId, displayName }) =>
         <CardDescription>Display Name: {displayName}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>Hello World</p>
+        <p></p>
       </CardContent>
     </Card>
   );

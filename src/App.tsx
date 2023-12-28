@@ -19,7 +19,7 @@ export type FantasyFootballLeague = {
 
 function App() {
   const [username, setUsername] = useState<string>("");
-  const [setApiResponse] = useState<ApiResponse>(null);
+  // const [setApiResponse] = useState<ApiResponse>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [leagueData, setLeagueData] = useState<ApiResponse>(null); // State to store the league data
@@ -47,7 +47,7 @@ function App() {
     try {
       const response = await fetch(`https://api.sleeper.app/v1/user/${username}`);
       const data: ApiResponse = await response.json();
-      setApiResponse(data);
+      // setApiResponse(data);
       if (data && data.user_id) {
         setUserId(data.user_id);
         fetchLeagueData(data.user_id); // Fetch league data after getting user_id
