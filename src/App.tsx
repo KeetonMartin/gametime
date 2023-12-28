@@ -19,12 +19,11 @@ export type FantasyFootballLeague = {
 
 function App() {
   const [username, setUsername] = useState<string>("");
-  const [apiResponse, setApiResponse] = useState<ApiResponse>(null);
+  const [setApiResponse] = useState<ApiResponse>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [leagueData, setLeagueData] = useState<ApiResponse>(null); // State to store the league data
   const [leagues, setLeagues] = useState<FantasyFootballLeague[]>([]); // State to store league objects
-  const [rosters, setRosters] = useState<string | null>(null);
 
   useEffect(() => {
     if (leagueData) {
