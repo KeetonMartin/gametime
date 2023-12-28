@@ -6,6 +6,7 @@ import { InputWithButton } from './components/ui/inputWithButton';
 import UserCard from './components/ui/userCard';
 import LeagueCard from './components/ui/leagueCard';
 import { PlayersContext, PlayersProvider } from './contexts/PlayersContext'; // Import the context and provider
+import PlayersCard from './components/ui/playersCard';
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -100,6 +101,7 @@ function App() {
       <Title />
       <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
       <UserCard username={username} userId={userId} displayName={displayName} />
+      <PlayersCard leagues={leagues} userId={userId} />
       {/* Create an array of LeagueCard components based on leagues */}
       {leagues.map((league, index) => (
         <LeagueCard key={index} league={league} userId={userId} displayName={displayName} />
