@@ -12,7 +12,7 @@ import {
 interface LeagueCardProps {
   league: FantasyFootballLeague;
   userId: string | null; // Add userId prop
-  displayName: string;
+  displayName: string | null;
 }
 
 const LeagueCard: React.FC<LeagueCardProps> = ({
