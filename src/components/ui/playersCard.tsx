@@ -13,13 +13,12 @@ import { FantasyFootballLeague } from "@/App";
 
 interface PlayersCardProps {
   leagues: FantasyFootballLeague[];
-  userId: string | null; // Add userId prop
+  userId: string | null;
 }
 
 const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId }) => {
   const { players } = usePlayersContext();
 
-  // Aggregate all starters for the given user from each league
   const userStarters = leagues.reduce((starters, league) => {
     const userRoster = league.rosters?.find((roster: { owner_id: string | null; }) => roster.owner_id === userId);
     if (userRoster && userRoster.starters) {
@@ -28,8 +27,14 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId }) => {
     return starters;
   }, []);
 
-  // Remove duplicate player IDs
   const uniqueStarters = Array.from(new Set(userStarters));
+
+  // Sort by search_rank
+  const sortedStarters = uniqueStarters.sort((a, b) => {
+    const rankA = players[a]?.search_rank || Infinity;
+    const rankB = players[b]?.search_rank || Infinity;
+    return rankA - rankB;
+  });
 
   return (
     <Table>
@@ -43,22 +48,23 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId }) => {
           <TableHead>Status</TableHead>
           <TableHead>Number</TableHead>
           <TableHead>Player ID</TableHead>
-          <TableHead>Sportradar ID</TableHead>
+          {/* <TableHead>Sportradar ID</TableHead> */}
         </TableRow>
       </TableHeader>
       <TableBody>
-        {uniqueStarters.map((playerId) => {
+        {sortedStarters.map((playerId) => {
           const player = players[playerId];
+          const isInactive = player?.status && player.status !== 'Active';
           return (
             <TableRow key={playerId}>
-              <TableCell className="text-left">{player?.full_name || 'Unknown Player'}</TableCell>
+              <TableCell className="font-bold text-left">{player?.full_name || 'Unknown Player'}</TableCell>
               <TableCell>{player?.position || 'N/A'}</TableCell>
               <TableCell>{player?.team || 'N/A'}</TableCell>
               <TableCell>{player?.search_rank || 'N/A'}</TableCell>
-              <TableCell>{player?.status || 'N/A'}</TableCell>
+              <TableCell style={{ color: isInactive ? 'red' : 'inherit' }}>{player?.status || 'N/A'}</TableCell>
               <TableCell>{player?.number || 'N/A'}</TableCell>
               <TableCell>{playerId}</TableCell>
-              <TableCell>{player?.sportradar_id || 'N/A'}</TableCell>
+              {/* <TableCell>{player?.sportradar_id || 'N/A'}</TableCell> */}
             </TableRow>
           );
         })}
