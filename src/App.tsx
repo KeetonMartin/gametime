@@ -101,7 +101,7 @@ function App() {
       <Title />
       <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
       <UserCard username={username} userId={userId} displayName={displayName} />
-      <PlayersCard leagues={leagues} userId={userId} />
+      <PlayersCard leagues={leagues} userId={userId} displayName={displayName} />
       {/* Create an array of LeagueCard components based on leagues */}
       {leagues.map((league, index) => (
         <LeagueCard key={index} league={league} userId={userId} displayName={displayName} />

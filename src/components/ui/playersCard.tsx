@@ -14,18 +14,16 @@ import { FantasyFootballLeague } from "@/App";
 interface PlayersCardProps {
     leagues: FantasyFootballLeague[];
     userId: string | null;
+    displayName: string | null;
 }
 
-const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId }) => {
+const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName }) => {
     const { players } = usePlayersContext();
 
-    // Define the type for playerLeaguesCount
     interface PlayerLeaguesCount {
         [playerId: string]: number;
     }
 
-
-    // Object to hold the count of leagues in which each player is a starter
     const playerLeaguesCount: PlayerLeaguesCount = {};
 
     leagues.forEach(league => {
@@ -39,8 +37,11 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId }) => {
 
     const uniqueStarters = Object.keys(playerLeaguesCount);
 
-    // Sort by search_rank
+    // Sort by leagues owned first, then by search_rank
     const sortedStarters = uniqueStarters.sort((a, b) => {
+        const leaguesOwnedDiff = playerLeaguesCount[b] - playerLeaguesCount[a];
+        if (leaguesOwnedDiff !== 0) return leaguesOwnedDiff;
+
         const rankA = players[a]?.search_rank || Infinity;
         const rankB = players[b]?.search_rank || Infinity;
         return rankA - rankB;
@@ -48,7 +49,7 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId }) => {
 
     return (
         <Table>
-            <TableCaption>{userId}'s Starters Across All Leagues</TableCaption>
+            <TableCaption>{displayName}'s Starters Across All Leagues</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead className="text-left">Player Name</TableHead>
@@ -65,9 +66,16 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId }) => {
                 {sortedStarters.map((playerId) => {
                     const player = players[playerId];
                     const isInactive = player?.status && player.status !== 'Active';
+                    let playerName = player?.full_name || 'Unknown Player';
+
+                    // Check if the player is a defense player
+                    if (player?.position === 'DEF') {
+                        playerName = player?.team ? `${player.team} Defense` : 'Unknown Defense';
+                    }
+
                     return (
                         <TableRow key={playerId}>
-                            <TableCell className="font-bold text-left">{player?.full_name || 'Unknown Player'}</TableCell>
+                            <TableCell className="font-bold text-left">{playerName}</TableCell>
                             <TableCell>{player?.position || 'N/A'}</TableCell>
                             <TableCell>{player?.team || 'N/A'}</TableCell>
                             <TableCell>{player?.search_rank || 'N/A'}</TableCell>
