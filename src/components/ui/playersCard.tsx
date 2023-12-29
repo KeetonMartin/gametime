@@ -18,6 +18,23 @@ interface PlayersCardProps {
     displayName: string | null;
 }
 
+// Utility function to format date
+const formatDate = (isoDateString: string | null | undefined): string => {
+    if (!isoDateString) return 'N/A';
+
+    const date = new Date(isoDateString);
+    const options: Intl.DateTimeFormatOptions = {
+        weekday: 'long', 
+        month: 'numeric', 
+        day: 'numeric', 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        hour12: true 
+    };
+
+    return new Intl.DateTimeFormat('en-US', options).format(date);
+};
+
 const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName }) => {
     const { players } = usePlayersContext();
     const { schedule } = useScheduleContext();
@@ -86,6 +103,8 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
 
                     // Find the player's team game
                     const playerGame = findPlayersGame(player?.team);
+                    // Format the scheduled time
+                    const formattedScheduledTime = formatDate(playerGame?.scheduled);
 
                     return (
                         <TableRow key={playerId}>
@@ -97,7 +116,7 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
                             <TableCell>{player?.number || 'N/A'}</TableCell>
                             <TableCell>{playerId}</TableCell>
                             <TableCell>{playerLeaguesCount[playerId]}</TableCell>
-                            <TableCell>{playerGame?.scheduled || 'N/A'}</TableCell>
+                            <TableCell>{formattedScheduledTime || 'N/A'}</TableCell>
                             <TableCell>{playerGame?.opponent || 'N/A'}</TableCell>
                         </TableRow>
                     );
