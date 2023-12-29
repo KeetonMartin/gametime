@@ -32,7 +32,10 @@ interface ScheduleContextType {
 }
 
 export const ScheduleContext = createContext<ScheduleContextType>({
-  schedule: { week: { games: [] } },
+  schedule: { week: {
+    games: [],
+    title: ''
+  } },
   setSchedule: () => {},
 });
 

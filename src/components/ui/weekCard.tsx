@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ScheduleContext } from '../../contexts/ScheduleContext'; // Adjust the import path as necessary
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 
 const WeekCard = () => {
   const { schedule } = useContext(ScheduleContext); // Access schedule from ScheduleContext
