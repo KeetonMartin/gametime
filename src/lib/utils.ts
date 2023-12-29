@@ -5,9 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Define a type for the team keys
+type TeamKey = 'ARI' | 'Arizona Cardinals' | 'ATL' | 'Atlanta Falcons' | 'BAL' | 'Baltimore Ravens' | 'BUF' | 'Buffalo Bills' | 'CAR' | 'Carolina Panthers' | 'CHI' | 'Chicago Bears' | 'CIN' | 'Cincinnati Bengals' | 'CLE' | 'Cleveland Browns' | 'DAL' | 'Dallas Cowboys' | 'DEN' | 'Denver Broncos' | 'DET' | 'Detroit Lions' | 'GB' | 'Green Bay Packers' | 'HOU' | 'Houston Texans' | 'IND' | 'Indianapolis Colts' | 'JAX' | 'Jacksonville Jaguars' | 'KC' | 'Kansas City Chiefs' | 'LAC' | 'Los Angeles Chargers' | 'LAR' | 'Los Angeles Rams' | 'MIA' | 'Miami Dolphins' | 'MIN' | 'Minnesota Vikings' | 'NE' | 'New England Patriots' | 'NO' | 'New Orleans Saints' | 'NYG' | 'New York Giants' | 'NYJ' | 'New York Jets' | 'OAK' | 'Las Vegas Raiders' | 'PHI' | 'Philadelphia Eagles' | 'PIT' | 'Pittsburgh Steelers' | 'SF' | 'San Francisco 49ers' | 'SEA' | 'Seattle Seahawks' | 'TB' | 'Tampa Bay Buccaneers' | 'TEN' | 'Tennessee Titans' | 'WAS' | 'Washington Commanders';
+
 // Helper function to determine background color based on NFL team
 export const getTeamBackgroundColor = (team: string | undefined) => {
-  const teamColors = {
+  const teamColors: { [key in TeamKey]?: string } = {
     'ARI': 'bg-red-200', // Arizona Cardinals
     'Arizona Cardinals': 'bg-red-200',
     'ATL': 'bg-slate-200', // Atlanta Falcons
@@ -71,9 +74,8 @@ export const getTeamBackgroundColor = (team: string | undefined) => {
     'TEN': 'bg-blue-200', // Tennessee Titans
     'Tennessee Titans': 'bg-blue-200',
     'WAS': 'bg-red-200', // Washington Commanders (formerly Redskins)
-    'Washington Commanders': 'bg-red-200',
-    'default': 'bg-gray-200', // Default background color
+    'Washington Commanders': 'bg-red-200'
   };
 
-  return teamColors[team] || teamColors['default'];
+  return teamColors[team as TeamKey] || 'bg-gray-200';
 };
