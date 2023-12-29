@@ -2,7 +2,6 @@ import React from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -15,16 +14,29 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card"; // Import Card components
+import { getTeamBackgroundColor } from "@/lib/utils";
 
 interface PlayersCardProps {
   leagues: FantasyFootballLeague[];
   userId: string | null;
   displayName: string | null;
 }
+
+// Helper function to determine background color based on position
+const getPositionBackgroundColor = (position: string) => {
+    switch (position) {
+      case 'QB': return 'bg-red-200';
+      case 'WR': return 'bg-blue-200';
+      case 'RB': return 'bg-green-200';
+      case 'TE': return 'bg-orange-200';
+      case 'DEF': return 'bg-[#dcc0ab]'; // Make sure to define bg-brown-200 in your CSS
+      case 'K': return 'bg-purple-200';
+      default: return 'bg-gray-200'; // Default background color
+    }
+};
 
 // Utility function to format date
 const formatDate = (isoDateString: string | null | undefined): string => {
@@ -131,18 +143,17 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>{caption}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="text-left">Player Name</TableHead>
               <TableHead>Position</TableHead>
               <TableHead>Team</TableHead>
-              <TableHead>Search Rank</TableHead>
+              {/* <TableHead>Search Rank</TableHead> */}
               <TableHead>Status</TableHead>
               <TableHead>Number</TableHead>
-              <TableHead>Player ID</TableHead>
+              {/* <TableHead>Player ID</TableHead> */}
               <TableHead>Leagues Owned</TableHead>
-              <TableHead>Scheduled Time</TableHead>
+              <TableHead>&#x1F4C5; Scheduled Time</TableHead>
               <TableHead>Opponent Team</TableHead>
             </TableRow>
           </TableHeader>
@@ -169,17 +180,21 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
                   <TableCell className="font-bold text-left">
                     {playerName}
                   </TableCell>
-                  <TableCell>{player?.position || "N/A"}</TableCell>
-                  <TableCell>{player?.team || "N/A"}</TableCell>
-                  <TableCell>{player?.search_rank || "N/A"}</TableCell>
+                  <TableCell className={getPositionBackgroundColor(player?.position)}>
+                    {player?.position || "N/A"}
+                  </TableCell>
+                  <TableCell className={getTeamBackgroundColor(player?.team)}>
+                    {player?.team || "N/A"}
+                  </TableCell>
+                  {/* <TableCell>{player?.search_rank || "N/A"}</TableCell> */}
                   <TableCell style={{ color: isInactive ? "red" : "inherit" }}>
                     {player?.status || "N/A"}
                   </TableCell>
                   <TableCell>{player?.number || "N/A"}</TableCell>
-                  <TableCell>{playerId}</TableCell>
+                  {/* <TableCell>{playerId}</TableCell> */}
                   <TableCell>{playerLeaguesCount[playerId]}</TableCell>
                   <TableCell>{formattedScheduledTime || "N/A"}</TableCell>
-                  <TableCell>{playerGame?.opponent || "N/A"}</TableCell>
+                  <TableCell className={getTeamBackgroundColor(playerGame?.opponent)}>{playerGame?.opponent || "N/A"}</TableCell>
                 </TableRow>
               );
             })}

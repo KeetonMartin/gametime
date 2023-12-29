@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import './App.css';
-import Heading from './components/ui/heading';
 import { Title } from './components/ui/title';
 import { InputWithButton } from './components/ui/inputWithButton';
 import UserCard from './components/ui/userCard';
@@ -114,7 +113,9 @@ function App() {
   return (
     <>
       <Title />
-      <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
+      <div className="input-center">
+        <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
+      </div>
       <div className="card-container">
         <UserCard username={username} userId={userId} displayName={displayName} avatar={avatar}/>
         <WeekCard />

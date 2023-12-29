@@ -46,3 +46,9 @@
   justify-content: space-around; /* Adjust as needed */
   align-items: center; /* Adjust if needed */
 }
+
+.input-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
