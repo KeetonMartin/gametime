@@ -30,13 +30,15 @@ const UserCard: React.FC<UserCardProps> = ({
             alignItems: "center",
           }}
         >
-          <Avatar>
-            <AvatarImage
-              src={"https://sleepercdn.com/avatars/" + avatar}
-              alt="@avatar"
-            />
-            <AvatarFallback>username</AvatarFallback>
-          </Avatar>
+          {avatar && (
+            <Avatar>
+              <AvatarImage
+                src={"https://sleepercdn.com/avatars/" + avatar}
+                alt="@avatar"
+              />
+              <AvatarFallback>{username}</AvatarFallback>
+            </Avatar>
+          )}
         </div>
 
         <CardTitle>{username}</CardTitle>
