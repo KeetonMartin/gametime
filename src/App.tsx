@@ -108,7 +108,7 @@ function App() {
 
   return (
     <>
-      <Heading />
+      {/* <Heading /> */}
       <Title />
       <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
       <UserCard username={username} userId={userId} displayName={displayName} />

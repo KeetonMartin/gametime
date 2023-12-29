@@ -21,9 +21,6 @@ const UserCard: React.FC<UserCardProps> = ({ username, userId, displayName }) =>
         <CardDescription>{userId}</CardDescription>
         <CardDescription>Display Name: {displayName}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <p></p>
-      </CardContent>
     </Card>
   );
 };

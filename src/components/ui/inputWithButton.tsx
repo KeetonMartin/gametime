@@ -22,7 +22,7 @@ export function InputWithButton({ username, setUsername, fetchUserData }: InputW
     <div className="flex w-full max-w-sm items-center space-x-2 p-4">
       <Input
         type="search"
-        placeholder="username"
+        placeholder="Sleeper username"
         value={username}
         onChange={handleInputChange}
       />

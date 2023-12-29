@@ -39,6 +39,9 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
     const { players } = usePlayersContext();
     const { schedule } = useScheduleContext();
 
+    // Get current time
+    const currentTime = new Date();
+
     interface PlayerLeaguesCount {
         [playerId: string]: number;
     }
@@ -72,6 +75,90 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
         return game ? { scheduled: game.scheduled, opponent: (game.home.alias === team ? game.away.name : game.home.name) } : null;
     };
 
+    // Filter games that started in the last 4 hours
+    const recentGames = sortedStarters.filter(playerId => {
+        const game = findPlayersGame(players[playerId]?.team);
+        if (!game || !game.scheduled) return false;
+        const gameTime = new Date(game.scheduled);
+        return gameTime >= new Date(currentTime.getTime() - 4 * 60 * 60 * 1000) && gameTime <= currentTime;
+    });
+
+    // Filter games that started before the last 4 hours
+    const pastGames = sortedStarters.filter(playerId => {
+        const game = findPlayersGame(players[playerId]?.team);
+        if (!game || !game.scheduled) return false;
+        const gameTime = new Date(game.scheduled);
+        return gameTime < new Date(currentTime.getTime() - 4 * 60 * 60 * 1000);
+    });
+
+    // Filter upcoming games
+    const upcomingGames = sortedStarters.filter(playerId => {
+        const game = findPlayersGame(players[playerId]?.team);
+        if (!game || !game.scheduled) return true;
+        const gameTime = new Date(game.scheduled);
+        return gameTime > currentTime;
+    });
+
+    // Function to render a table with given players
+    const renderTable = (playerIds, caption) => (
+        <Table>
+            <TableCaption>{caption}</TableCaption>
+            <TableHeader>
+                <TableRow>
+                    <TableHead className="text-left">Player Name</TableHead>
+                    <TableHead>Position</TableHead>
+                    <TableHead>Team</TableHead>
+                    <TableHead>Search Rank</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Number</TableHead>
+                    <TableHead>Player ID</TableHead>
+                    <TableHead>Leagues Owned</TableHead>
+                    <TableHead>Scheduled Time</TableHead>
+                    <TableHead>Opponent Team</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {playerIds.map(playerId => {
+                    const player = players[playerId];
+                    const isInactive = player?.status && player.status !== 'Active';
+                    let playerName = player?.full_name || 'Unknown Player';
+
+                    // Check if the player is a defense player
+                    if (player?.position === 'DEF') {
+                        playerName = player?.team ? `${player.team} Defense` : 'Unknown Defense';
+                    }
+
+                    // Find the player's team game
+                    const playerGame = findPlayersGame(player?.team);
+                    // Format the scheduled time
+                    const formattedScheduledTime = formatDate(playerGame?.scheduled);
+
+                    return (
+                        <TableRow key={playerId}>
+                            <TableCell className="font-bold text-left">{playerName}</TableCell>
+                            <TableCell>{player?.position || 'N/A'}</TableCell>
+                            <TableCell>{player?.team || 'N/A'}</TableCell>
+                            <TableCell>{player?.search_rank || 'N/A'}</TableCell>
+                            <TableCell style={{ color: isInactive ? 'red' : 'inherit' }}>{player?.status || 'N/A'}</TableCell>
+                            <TableCell>{player?.number || 'N/A'}</TableCell>
+                            <TableCell>{playerId}</TableCell>
+                            <TableCell>{playerLeaguesCount[playerId]}</TableCell>
+                            <TableCell>{formattedScheduledTime || 'N/A'}</TableCell>
+                            <TableCell>{playerGame?.opponent || 'N/A'}</TableCell>
+                        </TableRow>
+                    );
+                })}
+            </TableBody>
+        </Table>
+    );
+
+    return (
+        <>
+            {renderTable(recentGames, `${displayName}'s Recent Starters (Last 4 Hours)`)}
+            {renderTable(pastGames, `${displayName}'s Past Starters (More than 4 Hours Ago)`)}
+            {renderTable(upcomingGames, `${displayName}'s Upcoming Starters`)}
+        </>
+    );
 
     return (
         <Table>
