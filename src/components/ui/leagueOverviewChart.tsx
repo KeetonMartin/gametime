@@ -3,12 +3,20 @@ import { Card, CardContent, CardTitle } from "./card";
 import { usePlayersContext } from "@/contexts/PlayersContext";
 
 const LeagueOverviewChart = ({ rosters }) => {
-  const { players } = usePlayersContext(); // Access players context
+  const { players } = usePlayersContext();
 
   if (!rosters) {
     return <p>Loading chart data...</p>;
   }
 
+  // Calculate mean and standard deviation of fpts
+  const fptsArray = rosters.map((roster) => roster.settings.fpts);
+  const meanFpts = fptsArray.reduce((a, b) => a + b, 0) / fptsArray.length;
+  const stdDevFpts = Math.sqrt(
+    fptsArray.map((fpts) => Math.pow(fpts - meanFpts, 2)).reduce((a, b) => a + b, 0) / fptsArray.length
+  );
+
+  // Map over rosters to create data for scatter plot
   const data = rosters.map((roster) => {
     const { wins, losses, ties, fpts } = roster.settings;
     const totalGames = wins + losses + ties;
@@ -16,20 +24,24 @@ const LeagueOverviewChart = ({ rosters }) => {
 
     // Calculate the average age of starters
     const starterAges = roster.starters.map(
-      (playerId: string | number) => players[playerId]?.age || 0
+      (playerId) => players[playerId]?.age || 0
     );
-    const averageAge =
-      starterAges.length > 0
-        ? starterAges.reduce((a, b) => a + b, 0) / starterAges.length
-        : 0;
+    const averageAge = starterAges.length > 0
+      ? starterAges.reduce((a, b) => a + b, 0) / starterAges.length
+      : 0;
+
+    // Calculate z-score for fpts
+    const zScoreFpts = (fpts - meanFpts) / stdDevFpts;
 
     return {
-      x: averageAge, // Average age of starters as x-axis
-      y: winPercentage, // Win percentage as y-axis
-      size: fpts, // Fantasy points to determine the size of the scatter point
-      name: roster.owner_id, // Identifier
+      "Avg Age - Starters": averageAge,
+      "Win %": winPercentage,
+      "PF Z-score": zScoreFpts, // Using z-score for size
+      name: roster.owner_id,
     };
   });
+
+  console.log("Scatter Chart Data:", data);
 
   return (
     <Card>
@@ -37,11 +49,12 @@ const LeagueOverviewChart = ({ rosters }) => {
       <CardContent>
         <ScatterChart
           data={data}
-          x="x"
-          y="y"
-          size="size"
+          x="Avg Age - Starters"
+          y="Win %"
+          size="PF Z-score"
           category="name"
           showOpacity={true}
+		  sizeRange={[100, 1000]}
           minXValue={20}
           maxYValue={1.0}
           enableLegendSlider
