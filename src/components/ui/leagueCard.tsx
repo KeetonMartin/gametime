@@ -49,7 +49,7 @@ const LeagueCard: React.FC<LeagueCardProps> = ({
             <ul>
               {userRoster.starters.map((playerId: string, index: number) => {
                 const playerName = players[playerId]?.full_name || 'Unknown Player';
-                return <li key={index}>{playerId} - {playerName}</li>; // Display player ID and name
+                return <li key={index}>{playerName}</li>; // Display player ID and name
               })}
             </ul>
           </div>
