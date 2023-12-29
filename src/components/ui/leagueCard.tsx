@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import LeagueOverviewChart from './leagueOverviewChart';
 
 interface LeagueCardProps {
   league: FantasyFootballLeague;
@@ -40,6 +41,7 @@ const LeagueCard: React.FC<LeagueCardProps> = ({
         ) : (
           <CardDescription>No roster information available.</CardDescription>
         )}
+        <CardDescription><LeagueOverviewChart rosters={league.rosters} /></CardDescription>
         <br></br>
         <CardDescription>{displayName}'s Starters:</CardDescription>
       </CardHeader>
