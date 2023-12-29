@@ -28,7 +28,7 @@ interface ScheduleContextType {
       games: Game[];
     };
   };
-  setSchedule: React.Dispatch<React.SetStateAction<{ week: { games: Game[] } }>>;
+  setSchedule: React.Dispatch<React.SetStateAction<{ week: { title: string; games: Game[] } }>>;
 }
 
 export const ScheduleContext = createContext<ScheduleContextType>({
@@ -44,7 +44,7 @@ interface ScheduleProviderProps {
 }
 
 export const ScheduleProvider: React.FC<ScheduleProviderProps> = ({ children }) => {
-  const [schedule, setSchedule] = useState<{ week: { games: Game[] } }>({ week: { games: [] } });
+  const [schedule, setSchedule] = useState<{ week: { title: string; games: Game[] } }>({ week: { title: '', games: [] } });
 
   return (
     <ScheduleContext.Provider value={{ schedule, setSchedule }}>
