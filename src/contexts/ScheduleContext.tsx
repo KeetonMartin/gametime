@@ -24,6 +24,7 @@ interface Game {
 interface ScheduleContextType {
   schedule: {
     week: {
+      title: string;
       games: Game[];
     };
   };

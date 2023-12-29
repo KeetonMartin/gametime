@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+
+.card-container {
+  display: flex;
+  justify-content: space-around; /* Adjust as needed */
+  align-items: center; /* Adjust if needed */
+}

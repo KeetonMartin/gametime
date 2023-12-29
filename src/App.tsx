@@ -8,6 +8,7 @@ import LeagueCard from './components/ui/leagueCard';
 import { PlayersContext, PlayersProvider } from './contexts/PlayersContext'; // Import the context and provider
 import PlayersCard from './components/ui/playersCard';
 import { ScheduleContext, ScheduleProvider } from './contexts/ScheduleContext'; // Import the ScheduleContext and Provider
+import WeekCard from './components/ui/weekCard';
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -25,6 +26,7 @@ function App() {
   // const [setApiResponse] = useState<ApiResponse>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [leagueData, setLeagueData] = useState<ApiResponse>(null); // State to store the league data
   const [leagues, setLeagues] = useState<FantasyFootballLeague[]>([]); // State to store league objects
 
@@ -75,6 +77,9 @@ function App() {
       if (data && data.display_name) {
         setDisplayName(data.display_name);
       }
+      if (data && data.avatar) {
+        setAvatar(data.avatar);
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -108,12 +113,13 @@ function App() {
 
   return (
     <>
-      {/* <Heading /> */}
       <Title />
       <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
-      <UserCard username={username} userId={userId} displayName={displayName} />
+      <div className="card-container">
+        <UserCard username={username} userId={userId} displayName={displayName} avatar={avatar}/>
+        <WeekCard />
+      </div>
       <PlayersCard leagues={leagues} userId={userId} displayName={displayName} />
-      {/* Create an array of LeagueCard components based on leagues */}
       {leagues.map((league, index) => (
         <LeagueCard key={index} league={league} userId={userId} displayName={displayName} />
       ))}
