@@ -1,5 +1,4 @@
 import React from 'react';
-import { usePlayersContext } from '../../contexts/PlayersContext';
 import {
     Table,
     TableBody,
@@ -10,6 +9,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { FantasyFootballLeague } from "@/App";
+import { usePlayersContext } from '../../contexts/PlayersContext';
+import { useScheduleContext } from '../../contexts/ScheduleContext'; // Import ScheduleContext
 
 interface PlayersCardProps {
     leagues: FantasyFootballLeague[];
@@ -19,6 +20,7 @@ interface PlayersCardProps {
 
 const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName }) => {
     const { players } = usePlayersContext();
+    const { schedule } = useScheduleContext();
 
     interface PlayerLeaguesCount {
         [playerId: string]: number;
@@ -47,6 +49,13 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
         return rankA - rankB;
     });
 
+    // Helper function to find player's team game
+    const findPlayersGame = (team: string) => {
+        const game = schedule.week.games.find(g => g.home.alias === team || g.away.alias === team);
+        return game ? { scheduled: game.scheduled, opponent: (game.home.alias === team ? game.away.name : game.home.name) } : null;
+    };
+
+
     return (
         <Table>
             <TableCaption>{displayName}'s Starters Across All Leagues</TableCaption>
@@ -59,7 +68,9 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
                     <TableHead>Status</TableHead>
                     <TableHead>Number</TableHead>
                     <TableHead>Player ID</TableHead>
-                    <TableHead>Leagues Owned</TableHead> {/* New Column */}
+                    <TableHead>Leagues Owned</TableHead>
+                    <TableHead>Scheduled Time</TableHead>
+                    <TableHead>Opponent Team</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -73,6 +84,9 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
                         playerName = player?.team ? `${player.team} Defense` : 'Unknown Defense';
                     }
 
+                    // Find the player's team game
+                    const playerGame = findPlayersGame(player?.team);
+
                     return (
                         <TableRow key={playerId}>
                             <TableCell className="font-bold text-left">{playerName}</TableCell>
@@ -82,7 +96,9 @@ const PlayersCard: React.FC<PlayersCardProps> = ({ leagues, userId, displayName 
                             <TableCell style={{ color: isInactive ? 'red' : 'inherit' }}>{player?.status || 'N/A'}</TableCell>
                             <TableCell>{player?.number || 'N/A'}</TableCell>
                             <TableCell>{playerId}</TableCell>
-                            <TableCell>{playerLeaguesCount[playerId]}</TableCell> {/* Display the count */}
+                            <TableCell>{playerLeaguesCount[playerId]}</TableCell>
+                            <TableCell>{playerGame?.scheduled || 'N/A'}</TableCell>
+                            <TableCell>{playerGame?.opponent || 'N/A'}</TableCell>
                         </TableRow>
                     );
                 })}

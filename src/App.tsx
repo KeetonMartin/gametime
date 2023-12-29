@@ -7,6 +7,7 @@ import UserCard from './components/ui/userCard';
 import LeagueCard from './components/ui/leagueCard';
 import { PlayersContext, PlayersProvider } from './contexts/PlayersContext'; // Import the context and provider
 import PlayersCard from './components/ui/playersCard';
+import { ScheduleContext, ScheduleProvider } from './contexts/ScheduleContext'; // Import the ScheduleContext and Provider
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -28,12 +29,22 @@ function App() {
   const [leagues, setLeagues] = useState<FantasyFootballLeague[]>([]); // State to store league objects
 
   const { setPlayers } = useContext(PlayersContext); // Use the setPlayers function from context
+  const { setSchedule } = useContext(ScheduleContext); // Use setSchedule from ScheduleContext
 
   useEffect(() => {
     fetch('https://api.sleeper.app/v1/players/nfl')
       .then(response => response.json())
       .then(data => setPlayers(data)) // Store the data in the global state
       .catch(error => console.error('Error fetching player data:', error));
+
+    // New schedule data fetching
+    fetch('https://shielded-journey-91279-c0d1ba13fd56.herokuapp.com/api')
+      .then(response => response.json())
+      .then(data => {
+        // Assuming 'data' contains the schedule in the expected format
+        setSchedule(data); // Store the schedule data in the global state
+      })
+      .catch(error => console.error('Error fetching schedule data:', error));
 
     if (leagueData) {
       const mappedLeagues = leagueData.map((league: any) => ({
@@ -50,7 +61,7 @@ function App() {
         fetchRosterData(league.leagueId);
       });
     }
-  }, [leagueData, setPlayers]);
+  }, [leagueData, setPlayers, setSchedule]);
 
   const fetchUserData = async () => {
     try {
@@ -112,7 +123,9 @@ function App() {
 
 const WrappedApp = () => (
   <PlayersProvider>
-    <App />
+    <ScheduleProvider>
+      <App />
+    </ScheduleProvider>
   </PlayersProvider>
 );
 
