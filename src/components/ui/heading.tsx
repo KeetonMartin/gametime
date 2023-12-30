@@ -2,7 +2,7 @@ import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
-  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
 function Heading() {
@@ -10,7 +10,10 @@ function Heading() {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
+          {/* Replace this with your GitHub profile URL */}
+          <a href="https://github.com/keetonmartin/gametime" className={navigationMenuTriggerStyle()}>
+            GitHub
+          </a>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

@@ -9,6 +9,7 @@ import PlayersCard from './components/ui/playersCard';
 import { ScheduleContext, ScheduleProvider } from './contexts/ScheduleContext'; // Import the ScheduleContext and Provider
 import WeekCard from './components/ui/weekCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Heading from './components/ui/heading';
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -113,6 +114,9 @@ function App() {
 
   return (
     <>
+      <div className="headerContainer">
+        <Heading />
+      </div>
       <Title />
       <div className="input-center">
         <InputWithButton username={username} setUsername={setUsername} fetchUserData={fetchUserData} />
