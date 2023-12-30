@@ -2,10 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { ScatterChart } from "@tremor/react";
 import { Card, CardContent, CardTitle } from "./card";
 import { usePlayersContext } from "@/contexts/PlayersContext";
+import { Roster } from '@/lib/rosterTypes';
 
-const LeagueOverviewChart = ({ rosters }) => {
+interface LeagueOverviewChartProps {
+  rosters: Roster[];
+}
+
+// You can define this in the same file or in a separate types file
+interface UserDisplayNames {
+  [ownerId: string]: string;
+}
+
+const LeagueOverviewChart: React.FC<LeagueOverviewChartProps> = ({ rosters }) => {
   const { players } = usePlayersContext();
-  const [userDisplayNames, setUserDisplayNames] = useState({});
+  const [userDisplayNames, setUserDisplayNames] = useState<UserDisplayNames>({});
 
   useEffect(() => {
     const fetchUserDisplayNames = async () => {
@@ -18,7 +28,7 @@ const LeagueOverviewChart = ({ rosters }) => {
       );
 
       const displayNames = await Promise.all(displayNamePromises);
-      const displayNameMap = displayNames.reduce((acc, { ownerId, displayName }) => {
+      const displayNameMap = displayNames.reduce<UserDisplayNames>((acc, { ownerId, displayName }) => {
         acc[ownerId] = displayName;
         return acc;
       }, {});
