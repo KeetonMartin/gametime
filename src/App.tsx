@@ -8,6 +8,7 @@ import { PlayersContext, PlayersProvider } from './contexts/PlayersContext'; // 
 import PlayersCard from './components/ui/playersCard';
 import { ScheduleContext, ScheduleProvider } from './contexts/ScheduleContext'; // Import the ScheduleContext and Provider
 import WeekCard from './components/ui/weekCard';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -120,10 +121,22 @@ function App() {
         <UserCard username={username} userId={userId} displayName={displayName} avatar={avatar}/>
         <WeekCard />
       </div>
-      <PlayersCard leagues={leagues} userId={userId} displayName={displayName} />
-      {leagues.map((league, index) => (
-        <LeagueCard key={index} league={league} userId={userId} displayName={displayName} />
-      ))}
+
+      {/* Tabs Component */}
+      <Tabs defaultValue="players" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="players">All Players</TabsTrigger>
+          <TabsTrigger value="leagues">Leagues</TabsTrigger>
+        </TabsList>
+        <TabsContent value="players">
+          <PlayersCard leagues={leagues} userId={userId} displayName={displayName} />
+        </TabsContent>
+        <TabsContent value="leagues">
+          {leagues.map((league, index) => (
+            <LeagueCard key={index} league={league} userId={userId} displayName={displayName} />
+          ))}
+        </TabsContent>
+      </Tabs>
     </>
   );
 }
