@@ -30,6 +30,8 @@ interface PlayersCardProps {
   displayName: string | null;
 }
 
+const DEFAULT_IMAGE="https://blog.sleeper.com/content/images/2019/06/app_logo.png"
+
 // Helper function to determine background color based on position
 const getPositionBackgroundColor = (position: string) => {
     switch (position) {
@@ -234,7 +236,8 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
     <>
       <ToggleGroup type="multiple" variant="outline" size="lg" value={selectedLeagues} onValueChange={handleLeagueSelectionChange}>
         {leagues.map((league) => (
-          <ToggleGroupItem key={league.leagueId} value={league.leagueId} aria-label={`Toggle ${league.leagueName}`}>
+          <ToggleGroupItem key={league.leagueId} value={league.leagueId} aria-label={`Toggle ${league.leagueName}`} className="flex items-center gap-2">
+            <img src={"https://sleepercdn.com/avatars/" + league.avatar} onError={(e: React.SyntheticEvent<HTMLImageElement>) => { e.currentTarget.src = DEFAULT_IMAGE }} alt={`${league.leagueName} avatar`} style={{ width: 24, height: 24, borderRadius: '50%' }} />
             {league.leagueName}
           </ToggleGroupItem>
         ))}

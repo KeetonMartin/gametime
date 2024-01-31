@@ -19,7 +19,8 @@ export type FantasyFootballLeague = {
   numberOfTeams: number;
   leagueName: string;
   leagueId: string;
-  rosters: any
+  rosters: any;
+  avatar: string;
 };
 
 function App() {
@@ -54,7 +55,8 @@ function App() {
         numberOfTeams: league.total_rosters,
         leagueName: league.name,
         leagueId: league.league_id,
-        rosters: null // Initialize rosters as null
+        rosters: null, // Initialize rosters as null
+        avatar: league.avatar
       }));
 
       setLeagues(mappedLeagues);
