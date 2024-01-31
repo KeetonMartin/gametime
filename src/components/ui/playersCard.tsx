@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -68,6 +68,12 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
   const { players } = usePlayersContext();
   const { schedule } = useScheduleContext();
   const [selectedLeagues, setSelectedLeagues] = useState<string[]>(leagues.map(league => league.leagueId));
+
+  useEffect(() => {
+    if (leagues.length > 0) {
+      setSelectedLeagues(leagues.map(league => league.leagueId));
+    }
+  }, [leagues]); // Dependency on leagues ensures this effect runs when leagues data changes.
 
   // Function to handle league selection change
   const handleLeagueSelectionChange = (value: string[]) => {
@@ -221,6 +227,8 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
       </CardFooter>
     </Card>
   );
+
+  console.log(selectedLeagues); // Debugging the current state
 
   return (
     <>
