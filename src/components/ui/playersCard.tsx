@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -18,6 +18,11 @@ import {
   CardFooter,
 } from "@/components/ui/card"; // Import Card components
 import { getTeamBackgroundColor } from "@/lib/utils";
+// Import ToggleGroup components
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group";
 
 interface PlayersCardProps {
   leagues: FantasyFootballLeague[];
@@ -62,6 +67,15 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
 }) => {
   const { players } = usePlayersContext();
   const { schedule } = useScheduleContext();
+  const [selectedLeagues, setSelectedLeagues] = useState<string[]>(leagues.map(league => league.leagueId));
+
+  // Function to handle league selection change
+  const handleLeagueSelectionChange = (value: string[]) => {
+    setSelectedLeagues(value);
+  };
+  
+  // Filter players based on selected leagues
+  const filteredLeagues = leagues.filter(league => selectedLeagues.includes(league.leagueId));
 
   // Get current time
   const currentTime = new Date();
@@ -72,7 +86,8 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
 
   const playerLeaguesCount: PlayerLeaguesCount = {};
 
-  leagues.forEach((league) => {
+  // Adjust to use filteredLeagues for counting player appearances in selected leagues
+  filteredLeagues.forEach((league) => {
     const userRoster = league.rosters?.find(
       (roster: { owner_id: string | null }) => roster.owner_id === userId
     );
@@ -209,6 +224,13 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
 
   return (
     <>
+      <ToggleGroup type="multiple" value={selectedLeagues} onValueChange={handleLeagueSelectionChange}>
+        {leagues.map((league) => (
+          <ToggleGroupItem key={league.leagueId} value={league.leagueId} aria-label={`Toggle ${league.leagueName}`}>
+            {league.leagueName}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
       {recentGames.length > 0 &&
         renderTable(
           recentGames,
