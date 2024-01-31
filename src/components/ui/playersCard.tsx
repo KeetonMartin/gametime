@@ -224,7 +224,7 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
 
   return (
     <>
-      <ToggleGroup type="multiple" value={selectedLeagues} onValueChange={handleLeagueSelectionChange}>
+      <ToggleGroup type="multiple" variant="outline" size="lg" value={selectedLeagues} onValueChange={handleLeagueSelectionChange}>
         {leagues.map((league) => (
           <ToggleGroupItem key={league.leagueId} value={league.leagueId} aria-label={`Toggle ${league.leagueName}`}>
             {league.leagueName}
