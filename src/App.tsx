@@ -24,7 +24,11 @@ export type FantasyFootballLeague = {
 };
 
 function App() {
-  const [username, setUsername] = useState<string>("");
+  // Extract the username from the URL path
+  const path = window.location.pathname;
+  const defaultUsername = path.split("/")[2] || ""; // Get the username from the URL if it exists
+
+  const [username, setUsername] = useState<string>(defaultUsername);
   // const [setApiResponse] = useState<ApiResponse>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
