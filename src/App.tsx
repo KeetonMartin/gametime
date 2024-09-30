@@ -10,6 +10,7 @@ import { ScheduleContext, ScheduleProvider } from "./contexts/ScheduleContext"; 
 import WeekCard from "./components/ui/weekCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Heading from "./components/ui/heading";
+import { getCurrentNFLSeason } from "./lib/seasonUtils";
 
 // Define a type for your API response
 // Replace 'any' with a more specific type if you know the structure of your API response
@@ -45,21 +46,43 @@ function App() {
       .then((data) => setPlayers(data)) // Store the data in the global state
       .catch((error) => console.error("Error fetching player data:", error));
 
-    // New schedule data fetching
-    fetch("https://shielded-journey-91279-c0d1ba13fd56.herokuapp.com/api")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error fetching schedule data");
+    // New schedule data fetching - try local server first, then fallback to Heroku
+    const scheduleUrls = [
+      "http://localhost:5001/api", // Local development server
+      "https://shielded-journey-91279-c0d1ba13fd56.herokuapp.com/api" // Production fallback
+    ];
+    
+    const fetchScheduleData = async () => {
+      for (const url of scheduleUrls) {
+        try {
+          console.log(`Attempting to fetch schedule from: ${url}`);
+          const response = await fetch(url);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status} from ${url}`);
+          }
+          
+          const data = await response.json();
+          
+          if (data && !data.type) { // Ensure it's not an error response
+            console.log("Schedule data fetched successfully:", data);
+            setSchedule(data);
+            return; // Success, exit the loop
+          } else if (data.type === 'error') {
+            console.warn(`Error response from ${url}:`, data.message);
+            throw new Error(data.message);
+          }
+        } catch (error) {
+          console.warn(`Failed to fetch from ${url}:`, error.message);
+          // Continue to next URL
         }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          console.log("schedule data: ", data);
-          setSchedule(data); // Store the schedule data in the global state
-        }
-      })
-      .catch((error) => console.error("Error fetching schedule data:", error));
+      }
+      
+      // If all URLs failed, log final error
+      console.error("Failed to fetch schedule data from all sources");
+    };
+    
+    fetchScheduleData();
 
     if (leagueData) {
       const mappedLeagues = leagueData.map((league: any) => ({
@@ -103,8 +126,9 @@ function App() {
 
   const fetchLeagueData = async (userId: string) => {
     try {
+      const currentSeason = getCurrentNFLSeason();
       const response = await fetch(
-        `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/2024`
+        `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${currentSeason}`
       );
       const data: ApiResponse = await response.json();
       setLeagueData(data); // Set league data in state

@@ -23,6 +23,9 @@ interface Game {
 interface Schedule {
   week: number;
   games: Game[];
+  season?: number;
+  seasonType?: 'preseason' | 'regular' | 'playoffs' | 'offseason';
+  timestamp?: string;
 }
 
 interface ScheduleContextType {

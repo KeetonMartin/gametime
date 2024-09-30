@@ -57,8 +57,12 @@ const LeagueOverviewChart: React.FC<LeagueOverviewChartProps> = ({ rosters }) =>
     const winPercentage = totalGames > 0 ? wins / totalGames : 0;
 
     // Calculate the average age of starters
-    const starterAges = roster.starters.map(playerId => players[playerId]?.age || 0);
-    const averageAge = starterAges.length > 0 ? starterAges.reduce((a, b) => a + b, 0) / starterAges.length : 0;
+    const starterAges = roster.starters
+      .map(playerId => players[playerId]?.age)
+      .filter(age => age && age > 0);
+    const averageAge = starterAges.length > 0 
+      ? starterAges.reduce((a, b) => a + b, 0) / starterAges.length 
+      : 0;
 
     // Calculate z-score for fpts
     const zScoreFpts = (fpts - meanFpts) / stdDevFpts;
