@@ -103,7 +103,7 @@ function App() {
   const fetchLeagueData = async (userId: string) => {
     try {
       const response = await fetch(
-        `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/2023`
+        `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/2024`
       );
       const data: ApiResponse = await response.json();
       setLeagueData(data); // Set league data in state
