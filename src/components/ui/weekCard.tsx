@@ -5,16 +5,13 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 const WeekCard = () => {
   const { schedule } = useContext(ScheduleContext); // Access schedule from ScheduleContext
 
-  // Assuming 'schedule.week.games' is the array of games for the current week
-  const games = schedule.week.games;
-
   return (
     <Card style={{ width: '33.33%' }}>
       <CardHeader>
-        <CardTitle>Week {schedule.week.title}</CardTitle>
+        <CardTitle>Week {schedule.week}</CardTitle>
       </CardHeader>
       <CardContent>
-      <p>Total Games: {games.length}</p>
+        <p>Total Games: {schedule.games.length}</p>
       </CardContent>
     </Card>
   );

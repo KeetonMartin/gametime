@@ -46,20 +46,19 @@ const getPositionBackgroundColor = (position: string) => {
 };
 
 // Utility function to format date
-const formatDate = (isoDateString: string | null | undefined): string => {
+const formatDate = (isoDateString: string | null | undefined, broadcast: string | null | undefined): string => {
   if (!isoDateString) return "N/A";
 
   const date = new Date(isoDateString);
   const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    month: "numeric",
-    day: "numeric",
+    weekday: "short",
     hour: "numeric",
-    minute: "numeric",
+    minute: "2-digit",
     hour12: true,
   };
 
-  return new Intl.DateTimeFormat("en-US", options).format(date);
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+  return `${formattedDate} on ${broadcast || 'N/A'}`;
 };
 
 const PlayersCard: React.FC<PlayersCardProps> = ({
@@ -120,13 +119,14 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
 
   // Helper function to find player's team game
   const findPlayersGame = (team: string) => {
-    const game = schedule.week.games.find(
-      (g) => g.home.alias === team || g.away.alias === team
+    const game = schedule.games.find(
+      (g) => g.homeTeam.abbreviation === team || g.awayTeam.abbreviation === team
     );
     return game
       ? {
-          scheduled: game.scheduled,
-          opponent: game.home.alias === team ? game.away.name : game.home.name,
+          scheduled: game.date,
+          opponent: game.homeTeam.abbreviation === team ? game.awayTeam.name : game.homeTeam.name,
+          broadcast: game.broadcast,
         }
       : null;
   };
@@ -171,12 +171,10 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
               <TableHead className="text-left">Player Name</TableHead>
               <TableHead>Position</TableHead>
               <TableHead>Team</TableHead>
-              {/* <TableHead>Search Rank</TableHead> */}
               <TableHead>Status</TableHead>
               <TableHead>Number</TableHead>
-              {/* <TableHead>Player ID</TableHead> */}
               <TableHead>Leagues Owned</TableHead>
-              <TableHead>&#x1F4C5; Scheduled Time</TableHead>
+              <TableHead>Game Info</TableHead>
               <TableHead>Opponent Team</TableHead>
             </TableRow>
           </TableHeader>
@@ -186,17 +184,14 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
               const isInactive = player?.status && player.status !== "Active";
               let playerName = player?.full_name || "Unknown Player";
 
-              // Check if the player is a defense player
               if (player?.position === "DEF") {
                 playerName = player?.team
                   ? `${player.team} Defense`
                   : "Unknown Defense";
               }
 
-              // Find the player's team game
               const playerGame = findPlayersGame(player?.team);
-              // Format the scheduled time
-              const formattedScheduledTime = formatDate(playerGame?.scheduled);
+              const formattedGameInfo = formatDate(playerGame?.scheduled, playerGame?.broadcast);
 
               return (
                 <TableRow key={playerId}>
@@ -209,14 +204,12 @@ const PlayersCard: React.FC<PlayersCardProps> = ({
                   <TableCell className={getTeamBackgroundColor(player?.team)}>
                     {player?.team || "N/A"}
                   </TableCell>
-                  {/* <TableCell>{player?.search_rank || "N/A"}</TableCell> */}
                   <TableCell style={{ color: isInactive ? "red" : "inherit" }}>
                     {player?.status || "N/A"}
                   </TableCell>
                   <TableCell>{player?.number || "N/A"}</TableCell>
-                  {/* <TableCell>{playerId}</TableCell> */}
                   <TableCell>{playerLeaguesCount[playerId]}</TableCell>
-                  <TableCell>{formattedScheduledTime || "N/A"}</TableCell>
+                  <TableCell>{formattedGameInfo}</TableCell>
                   <TableCell className={getTeamBackgroundColor(playerGame?.opponent)}>{playerGame?.opponent || "N/A"}</TableCell>
                 </TableRow>
               );

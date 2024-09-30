@@ -55,6 +55,7 @@ function App() {
       })
       .then((data) => {
         if (data) {
+          console.log("schedule data: ", data);
           setSchedule(data); // Store the schedule data in the global state
         }
       })

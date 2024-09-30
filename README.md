@@ -46,3 +46,9 @@ We highly appreciate contributions to Gametime! Whether it's bug fixing, feature
 3. Submit a pull request: Once you've implemented your changes, submit a pull request for review.
 
 Thank you for your interest in enhancing Gametime and helping the fantasy football community!
+
+### Things to look into
+ESPN has player stats for each game:
+sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/{YEAR}/athletes/{ATHLETE_ID}/eventlog
+https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2022/athletes/14876/eventlog
+Sleeper API I think returns the ESPN id of each player
