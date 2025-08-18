@@ -73,7 +73,7 @@ function App() {
             throw new Error(data.message);
           }
         } catch (error) {
-          console.warn(`Failed to fetch from ${url}:`, error.message);
+          console.warn(`Failed to fetch from ${url}:`, (error as Error).message);
           // Continue to next URL
         }
       }
