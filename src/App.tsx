@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import "./App.css";
-import { Title } from "./components/ui/title";
 import { InputWithButton } from "./components/ui/inputWithButton";
 import UserCard from "./components/ui/userCard";
 import LeagueCard from "./components/ui/leagueCard";
@@ -9,18 +7,23 @@ import PlayersCard from "./components/ui/playersCard";
 import { ScheduleContext, ScheduleProvider } from "./contexts/ScheduleContext"; // Import the ScheduleContext and Provider
 import WeekCard from "./components/ui/weekCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Heading from "./components/ui/heading";
+import { AppHeader } from "./components/ui/app-header";
 import { getCurrentNFLSeason } from "./lib/seasonUtils";
 
-// Define a type for your API response
-// Replace 'any' with a more specific type if you know the structure of your API response
-type ApiResponse = any | null;
+// Define a type for the Sleeper league API response
+type SleeperLeague = {
+  total_rosters: number;
+  name: string;
+  league_id: string;
+  avatar: string;
+};
+type ApiResponse = unknown | null;
 
 export type FantasyFootballLeague = {
   numberOfTeams: number;
   leagueName: string;
   leagueId: string;
-  rosters: any;
+  rosters: unknown;
   avatar: string;
 };
 
@@ -34,7 +37,7 @@ function App() {
   const [userId, setUserId] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
-  const [leagueData, setLeagueData] = useState<ApiResponse>(null); // State to store the league data
+  const [leagueData, setLeagueData] = useState<SleeperLeague[] | null>(null); // State to store the league data
   const [leagues, setLeagues] = useState<FantasyFootballLeague[]>([]); // State to store league objects
 
   const { setPlayers } = useContext(PlayersContext); // Use the setPlayers function from context
@@ -85,7 +88,7 @@ function App() {
     fetchScheduleData();
 
     if (leagueData) {
-      const mappedLeagues = leagueData.map((league: any) => ({
+      const mappedLeagues = leagueData.map((league) => ({
         numberOfTeams: league.total_rosters,
         leagueName: league.name,
         leagueId: league.league_id,
@@ -159,51 +162,50 @@ function App() {
 
   return (
     <>
-      <div className="headerContainer">
-        <Heading />
-      </div>
-      <Title />
-      <div className="input-center">
-        <InputWithButton
-          username={username}
-          setUsername={setUsername}
-          fetchUserData={fetchUserData}
-        />
-      </div>
-      <div className="card-container">
-        <UserCard
-          username={username}
-          userId={userId}
-          displayName={displayName}
-          avatar={avatar}
-        />
-        <WeekCard />
-      </div>
-
-      {/* Tabs Component */}
-      <Tabs defaultValue="players" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="players">All Players</TabsTrigger>
-          <TabsTrigger value="leagues">Leagues</TabsTrigger>
-        </TabsList>
-        <TabsContent value="players">
-          <PlayersCard
-            leagues={leagues}
+      <AppHeader />
+      <main className="container mx-auto space-y-6 p-4">
+        <div className="flex justify-center">
+          <InputWithButton
+            username={username}
+            setUsername={setUsername}
+            fetchUserData={fetchUserData}
+          />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <UserCard
+            username={username}
             userId={userId}
             displayName={displayName}
+            avatar={avatar}
           />
-        </TabsContent>
-        <TabsContent value="leagues">
-          {leagues.map((league, index) => (
-            <LeagueCard
-              key={index}
-              league={league}
+          <WeekCard />
+        </div>
+
+        {/* Tabs Component */}
+        <Tabs defaultValue="players" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="players">All Players</TabsTrigger>
+            <TabsTrigger value="leagues">Leagues</TabsTrigger>
+          </TabsList>
+          <TabsContent value="players">
+            <PlayersCard
+              leagues={leagues}
               userId={userId}
               displayName={displayName}
             />
-          ))}
-        </TabsContent>
-      </Tabs>
+          </TabsContent>
+          <TabsContent value="leagues">
+            {leagues.map((league, index) => (
+              <LeagueCard
+                key={index}
+                league={league}
+                userId={userId}
+                displayName={displayName}
+              />
+            ))}
+          </TabsContent>
+        </Tabs>
+      </main>
     </>
   );
 }

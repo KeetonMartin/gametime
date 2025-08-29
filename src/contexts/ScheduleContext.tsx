@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, ReactNode, useContext } from 'react';
 
 interface Team {
