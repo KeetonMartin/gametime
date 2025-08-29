@@ -1,8 +1,13 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, ReactNode, useContext } from 'react';
 
+interface PlayersMap {
+  [key: string]: unknown;
+}
+
 interface PlayersContextType {
-  players: { [key: string]: any }; // Replace 'any' with a more specific type if possible
-  setPlayers: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>; // Same as above
+  players: PlayersMap;
+  setPlayers: React.Dispatch<React.SetStateAction<PlayersMap>>;
 }
 
 export const PlayersContext = createContext<PlayersContextType>({
@@ -15,7 +20,7 @@ interface PlayersProviderProps {
 }
 
 export const PlayersProvider: React.FC<PlayersProviderProps> = ({ children }) => {
-  const [players, setPlayers] = useState<{ [key: string]: any }>({}); // Replace 'any' with a more specific type if possible
+  const [players, setPlayers] = useState<PlayersMap>({});
 
   return (
     <PlayersContext.Provider value={{ players, setPlayers }}>
